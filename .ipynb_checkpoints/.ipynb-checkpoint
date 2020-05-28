@@ -1,0 +1,448 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Popularité d'une page Web - Simulation"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Sources** : Livre SNT Hatier et Bordas\n",
+    "\n",
+    "### Présentation\n",
+    "*La principale difficulté des moteurs de recherche consiste à classer, de la manière la plus pertinente possible, l'ensemble des pages contenant les mots clés demandés, pour choisir quelles pages présenter en premier. En 1998, les informaticiens américains Larry Page et Sergey Brin proposent l'algorithme de **PageRank** qui a conduit à la création du moteur de recherche Google et permis de proposer une définition à l'idée de \"popularité\" d'une page.*\n",
+    "\n",
+    "*L'**algorithme PageRank** repose sur le principe de calculer la popularité d'une page à partir de la popularité des pages qui la citent.*"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Enoncé\n",
+    "\n",
+    "*Six pages Web nommées de A à F comportent des liens hypertextes formant une toile selon le schéma suivant :*\n",
+    "\n",
+    "![](graphe.jpg)\n",
+    "\n",
+    "Des internautes arrivent par hasard sur la page A. Ils suivent de manière aléatoire les liens proposés par chaque page. Chaque clic sur un lien de la page augmente son compteur de vue. Nous allons essayer d'approcher la réponse à la question suivante :\n",
+    "\n",
+    "**Quelle sera la page la plus populaire après le passage des internautes ?**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "----\n",
+    "\n",
+    "### Etude du programme\n",
+    "\n",
+    "On propose le code ci-dessous comme point de départ du problème à résoudre : "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from random import choice\n",
+    "\n",
+    "# Partie déclarative\n",
+    "# -------------------------------------------------\n",
+    "# Liste des pages\n",
+    "nom = [\"A\", \"B\", \"C\", \"D\", \"E\", \"F\"]\n",
+    "# Nombre de visites des pages A, B, C, D, E et F\n",
+    "nbVisites = [0, 0, 0, 0, 0, 0]\n",
+    "# Nombre de déplacements à simuler\n",
+    "nbDeplacements = 10 \n",
+    "# le depart se fait sur la page A (indice 0 de la liste nom)\n",
+    "page = 0"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Les flèches sur le graphe représentent les déplacements possibles à partir de chacune des pages. Elles sont codées par les sous-listes dans la liste *hyperliens* ci-dessous."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Partie déclarative suite\n",
+    "# Exemple : la page C à la position nom[2] est reliée\n",
+    "# aux pages A, nom[0] et F, nom[5] d'où la sous liste [0,5]\n",
+    "# à la position hyperliens[2]\n",
+    "# hyperliens = [[4], [0, 4], [0, 5],[?],[?],[?]] # A compléter\n",
+    "hyperliens = [[4], [0, 4], [0, 5], [0, 4], [1, 2, 3, 5], [4]]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**1. Modifier** la liste *hyperliens* pour qu'elle corresponde au graphe. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "On donne le début de la partie exécutive."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Page actuelle : E\n",
+      "Page actuelle : F\n",
+      "Page actuelle : E\n",
+      "Page actuelle : C\n",
+      "Page actuelle : A\n",
+      "Page actuelle : E\n",
+      "Page actuelle : F\n",
+      "Page actuelle : E\n",
+      "Page actuelle : D\n",
+      "Page actuelle : A\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Partie exécutive\n",
+    "# ------------------------------------------\n",
+    "for i in range(nbDeplacements):\n",
+    "    page = choice(hyperliens[page])\n",
+    "    print(\"Page actuelle : \" + nom[page])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**2. Expliquer** ce que font les deux lignes de code dans la boucle for. Quelle est l'utilité de la méthode *choice* dans ce programme ?\n",
+    "\n",
+    "*Aide* : on pourra exécuter la boucle for \"à la main\" pour faire apparaître l'évolution des variables dans le tableau ci-dessous (à recopier au brouillon).\n",
+    "\n",
+    "![](aide.jpg)"
+   ]
+  },
+  {
+   "cell_type": "raw",
+   "metadata": {},
+   "source": [
+    "Réponse : le code de la boucle for affiche la page sur laquelle a eu lieu le déplacement. Dans ce programme *choice* choisit un lien parmi ceux disponible sur une page."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**3. Faire** plusieurs simulations. A quoi correspond ce qui est affiché par le programme ?"
+   ]
+  },
+  {
+   "cell_type": "raw",
+   "metadata": {},
+   "source": [
+    "Réponse : le programme affiche le déplacement entre les pages."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "----\n",
+    "\n",
+    "### Modifications du programme"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**4. Compléter** le code ci-dessous pour que la liste *nbVisites* contienne le nombre de passages dans la page E. Afficher ce résultat à la suite du parcours réalisé.\n",
+    "\n",
+    "Exemple\n",
+    "![](parcours.jpg)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Page actuelle : E\n",
+      "Page actuelle : B\n",
+      "Page actuelle : A\n",
+      "Page actuelle : E\n",
+      "Page actuelle : F\n",
+      "Page actuelle : E\n",
+      "Page actuelle : B\n",
+      "Page actuelle : A\n",
+      "Page actuelle : E\n",
+      "Page actuelle : F\n",
+      "On est passé 4 fois par la page E\n"
+     ]
+    }
+   ],
+   "source": [
+    "from random import choice\n",
+    "\n",
+    "# Partie déclarative\n",
+    "# -------------------------------------------------\n",
+    "# Liste des pages\n",
+    "nom = [\"A\", \"B\", \"C\", \"D\", \"E\", \"F\"]\n",
+    "# Liste des liens\n",
+    "hyperliens = [[4], [0, 4], [0, 5], [0, 4], [1, 2, 3, 5], [4]]\n",
+    "# Nombre de visites des pages A, B, C, D, E et F\n",
+    "nbVisites = [0, 0, 0, 0, 0, 0]\n",
+    "# Nombre de déplacements à simuler\n",
+    "nbDeplacements = 10\n",
+    "# le depart se fait sur la page A (indice 0 de la liste nom)\n",
+    "page = 0\n",
+    "# Partie exécutive à modifier\n",
+    "# ------------------------------------------\n",
+    "for i in range(nbDeplacements):\n",
+    "    page = choice(hyperliens[page])\n",
+    "    print(\"Page actuelle : \" + nom[page])\n",
+    "    # votre code\n",
+    "    if nom[page] == 'E':\n",
+    "        nbVisites[4] += 1\n",
+    "\n",
+    "print(f\"On est passé {nbVisites[4]} fois par la page E\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**5. Compléter** le code ci-dessous pour qu'il affiche maintenant le passage dans chacune des pages. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Page actuelle : E\n",
+      "Page actuelle : C\n",
+      "Page actuelle : A\n",
+      "Page actuelle : E\n",
+      "Page actuelle : C\n",
+      "Page actuelle : F\n",
+      "Page actuelle : E\n",
+      "Page actuelle : C\n",
+      "Page actuelle : F\n",
+      "Page actuelle : E\n",
+      "Visite de A : 1\n",
+      "Visite de B : 0\n",
+      "Visite de C : 3\n",
+      "Visite de D : 0\n",
+      "Visite de E : 4\n",
+      "Visite de F : 2\n"
+     ]
+    }
+   ],
+   "source": [
+    "from random import choice\n",
+    "\n",
+    "# Partie déclarative\n",
+    "# -------------------------------------------------\n",
+    "# Liste des pages\n",
+    "nom = [\"A\", \"B\", \"C\", \"D\", \"E\", \"F\"]\n",
+    "# Liste des liens\n",
+    "hyperliens = [[4], [0, 4], [0, 5], [0, 4], [1, 2, 3, 5], [4]]\n",
+    "# Nombre de visites des pages A, B, C, D, E et F\n",
+    "nbVisites = [0, 0, 0, 0, 0, 0]\n",
+    "# Nombre de déplacements à simuler\n",
+    "nbDeplacements = 10\n",
+    "# le depart se fait sur la page A (indice 0 de la liste nom)\n",
+    "page = 0\n",
+    "# Partie exécutive à modifier\n",
+    "# ------------------------------------------\n",
+    "for i in range(nbDeplacements):\n",
+    "    page = choice(hyperliens[page])\n",
+    "    print(\"Page actuelle : \" + nom[page])\n",
+    "    if nom[page] == 'A':\n",
+    "        nbVisites[0] += 1\n",
+    "    elif nom[page] == 'B':\n",
+    "        nbVisites[1] += 1\n",
+    "    elif nom[page] == 'C':\n",
+    "        nbVisites[2] += 1\n",
+    "    elif nom[page] == 'D':\n",
+    "        nbVisites[3] += 1\n",
+    "    elif nom[page] == 'E':\n",
+    "        nbVisites[4] += 1\n",
+    "    elif nom[page] == 'F':\n",
+    "        nbVisites[5] += 1\n",
+    "for k in range(len(nom)):\n",
+    "    print(f\"Visite de {nom[k]} : {nbVisites[k]}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**6. Compléter** le code ci-dessous pour qu'il calcule le score d'une page en pourcentage. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Visite de A : 14.85 %\n",
+      "Visite de B : 9.95 %\n",
+      "Visite de C : 10.2 %\n",
+      "Visite de D : 9.63 %\n",
+      "Visite de E : 40.0 %\n",
+      "Visite de F : 15.37 %\n"
+     ]
+    }
+   ],
+   "source": [
+    "from random import choice\n",
+    "\n",
+    "# Partie déclarative\n",
+    "# -------------------------------------------------\n",
+    "# Liste des pages\n",
+    "nom = [\"A\", \"B\", \"C\", \"D\", \"E\", \"F\"]\n",
+    "# Liste des liens\n",
+    "hyperliens = [[4], [0, 4], [0, 5], [0, 4], [1, 2, 3, 5], [4]]\n",
+    "# Nombre de visites des pages A, B, C, D, E et F\n",
+    "nbVisites = [0, 0, 0, 0, 0, 0]\n",
+    "# Nombre de déplacements à simuler\n",
+    "nbDeplacements = 10000\n",
+    "# le depart se fait sur la page A (indice 0 de la liste nom)\n",
+    "page = 0\n",
+    "# Partie exécutive à modifier\n",
+    "# ------------------------------------------\n",
+    "for i in range(nbDeplacements):\n",
+    "    page = choice(hyperliens[page])\n",
+    "    # print(\"Page actuelle : \" + nom[page])\n",
+    "    if nom[page] == 'A':\n",
+    "        nbVisites[0] += 1\n",
+    "    elif nom[page] == 'B':\n",
+    "        nbVisites[1] += 1\n",
+    "    elif nom[page] == 'C':\n",
+    "        nbVisites[2] += 1\n",
+    "    elif nom[page] == 'D':\n",
+    "        nbVisites[3] += 1\n",
+    "    elif nom[page] == 'E':\n",
+    "        nbVisites[4] += 1\n",
+    "    elif nom[page] == 'F':\n",
+    "        nbVisites[5] += 1\n",
+    "nbVisites = [100*j/nbDeplacements for j in nbVisites]\n",
+    "for k in range(len(nom)):\n",
+    "    print(f\"Visite de {nom[k]} : {nbVisites[k]} %\")    "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**7. Mettre** *print(\"Page actuelle : \" + nom[page])* en commentaire. Faire des tests pour *nbDeplacements* = 100, 1000 et 10000."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Analyse des résultats"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**8.** Quelle est la page qui à la plus grande popularité ? Comment expliquer ce succès ?"
+   ]
+  },
+  {
+   "cell_type": "raw",
+   "metadata": {},
+   "source": [
+    "Réponse : la page E"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "En répétant un grand nombre de fois le jeu, on remarque que la popularité de la page F(15%) est égale à la popularité de la page E divisée par quatre (10%) plus la populatité de la page 2 divisée par deux (5%).\n",
+    "\n",
+    "**9.** En partant de l'observation du tracé du graphe, dire pourquoi il faut diviser par 4 la popularité de E et diviser par 2 la popularité de C."
+   ]
+  },
+  {
+   "cell_type": "raw",
+   "metadata": {},
+   "source": [
+    "Réponse: E possède quatre liens dont un vers F, la probabilité que F soit atteinte à partir de E est donc égale à p(E)/4. C possède deux liens dont un vers F, d'où p(C)/2 "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**10.** En raisonnant comme pour la question précédente, établir une relation pour la popularité de E."
+   ]
+  },
+  {
+   "cell_type": "raw",
+   "metadata": {},
+   "source": [
+    "Réponse : E est en lien avec A, B, C, D, F on note pE la popularité de E\n",
+    "    pE = pA + pF + (pB + pC + pD)/2"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
